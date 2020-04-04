@@ -5,7 +5,6 @@
 [TOC]
 
 
-
 ## 1. 함수형 프로그램이란?
 
 **순수함수**를 만들고 조합성을 강조하는 프로그래밍 패러다임
@@ -90,8 +89,6 @@ console.log(obj1.val) // 15
 
 #### 새로운 값을 변경하는 순수함수
 
-**새로운 값을 리턴하는 순수함수**
-
 ```javascript
 var obj1 = {val:10}
 const add = (obj,b) => {
@@ -156,4 +153,83 @@ add(10,5) // 15 어디서 평가 하여도 동일한 결과 값을 가진다.
 ```
 
 - 안전하고 다루기 쉬운 함수가 된다. 안전하기 때문에 다른곳에서도 조합성을 높일 수 있다.
+
+
+
+### 일급함수
+
+자바스크립트에서는 함수가 **일급함수**이다. 즉 **함수를 값**으로 다룰 수 있다.
+
+- 함수를 변수에 담을 수 있다
+- 인자로 넘겨줄 수 있다
+
+```javascript
+// 함수를 변수에 담을 수 있다.
+function add(a,b){
+  return a + b;
+}
+// foo라는 변수에 함수를 담는다. return 결과 값
+const foo = function(a) {return a * a};
+const poo = add;
+```
+
+```javascript
+// 함수의 인자로 함수를 받을 수 있다.
+function foo(f) {
+  return f()
+}
+foo(function(){return 10})
+
+function poo() {
+  return 10;
+}
+foo(poo)
+```
+
+
+
+**addMaker 함수를 만들어 보자**
+
+```javascript
+const addMaker = (a) => (b) => a + b; 
+/* 위와 동일한 함수
+function addMaker (a) {
+  return function(b){
+    return a + b;
+  }
+} 
+*/
+const add10 = addMaker(10) 
+add10(5) // 15
+```
+
+```text
+const add10 이라는 변수에 addMaker(10)을 담는다.
+add10은 
+return function(b){
+	return a + b;
+}
+익명함수를 리턴하고 있기때문에 add10값은 함수이다.
+return function(b) {
+	return 10 + b
+}
+```
+
+- 일급 함수, 순수함수, 클로저
+- 평가 시점이 언제든 상관없다.
+
+
+
+```javascript
+// 잘 쓰이진 않지만 함수형 프로그래밍의 일급 함수를 말해주는 예제
+const func = (f1,f2,f3) => {
+	return f3(f1() + f2())
+}
+// 실행
+func(
+  function(){return 10},
+  function(){return 5},
+  function(a){return a * a}
+    )
+```
 
